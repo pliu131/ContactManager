@@ -41,12 +41,27 @@ describe 'the person view', type: :feature do
       phone = person.phone_numbers.first
       old_number = phone.number
 
-      first(:link, 'edit').click
+      first(:link, 'edit phone number').click
       page.fill_in('Number', with: '555-9191')
       page.click_button('Update Phone number')
       expect(current_path).to eq(person_path(person))
       expect(page).to have_content('555-9191')
       expect(page).not_to have_content(old_number)
+    end
+
+    it 'has links to delete phone numbers' do
+      person.phone_numbers.each do |phone|
+        expect(page).to have_link('delete phone number', href: phone_number_path(phone))
+      end
+    end
+
+    it 'deletes a phone number' do
+      phone = person.phone_numbers.first
+      number = phone.number
+
+      first(:link, 'delete phone number').click
+      expect(current_path).to eq(person_path(person))
+      expect(page).not_to have_content(number)
     end
   end
 
@@ -82,11 +97,29 @@ describe 'the person view', type: :feature do
     end
 
     it 'edits an email address' do
-      pending
-      email = person.email_address.first
+      email = person.email_addresses.first
       old_email = email.address
+      first(:link, 'edit email address').click
+      page.fill_in('Address', with: "new@gmail.com")
+      page.click_button('Update Email address')
+      expect(current_path).to eq(person_path(person))
+      expect(page).to have_content('new@gmail.com')
+      expect(page).not_to have_content(old_email)
+    end
 
-      first(:link, 'edit').click
+    it 'has links to delete email addresses' do
+      person.email_addresses.each do |email|
+        expect(page).to have_link('delete email address', href: email_address_path(email))
+      end
+    end
+
+    it 'deletes a phone number' do
+      email = person.email_addresses.first
+      address = email.address
+
+      first(:link, 'delete email address').click
+      expect(current_path).to eq(person_path(person))
+      expect(page).not_to have_content(address)
     end
   end
 end

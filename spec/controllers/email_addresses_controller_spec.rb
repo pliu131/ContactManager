@@ -102,6 +102,8 @@ describe EmailAddressesController do
 
   describe "PUT update" do
     describe "with valid params" do
+      let(:alice) { Person.create(first_name: 'Alice', last_name: 'Smith') }
+      let(:valid_attributes) { { address: 'alice@gmail.com', person_id: alice.id } }
       it "updates the requested email_address" do
         email_address = EmailAddress.create! valid_attributes
         # Assuming there are no other email_addresses in the database, this
@@ -121,7 +123,7 @@ describe EmailAddressesController do
       it "redirects to the email_address" do
         email_address = EmailAddress.create! valid_attributes
         put :update, {:id => email_address.to_param, :email_address => valid_attributes}, valid_session
-        response.should redirect_to(email_address)
+        response.should redirect_to(email_address.person)
       end
     end
 
@@ -145,6 +147,9 @@ describe EmailAddressesController do
   end
 
   describe "DELETE destroy" do
+    let(:alice) { Person.create(first_name: 'Alice', last_name: 'Smith') }
+    let(:valid_attributes) { { address: 'alice@gmail.com', person_id: alice.id } }
+    
     it "destroys the requested email_address" do
       email_address = EmailAddress.create! valid_attributes
       expect {
@@ -155,7 +160,7 @@ describe EmailAddressesController do
     it "redirects to the email_addresses list" do
       email_address = EmailAddress.create! valid_attributes
       delete :destroy, {:id => email_address.to_param}, valid_session
-      response.should redirect_to(email_addresses_url)
+      response.should redirect_to(email_address.person)
     end
   end
 
