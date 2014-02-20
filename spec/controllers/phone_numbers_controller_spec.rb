@@ -65,6 +65,7 @@ describe PhoneNumbersController do
     describe "with valid params" do
       let(:alice) { Person.create(first_name: 'Alice', last_name: 'Smith') }
       let(:valid_attributes) { { number: '555-1234', person_id: alice.id } }
+      
       it "creates a new PhoneNumber" do
         expect {
           post :create, {:phone_number => valid_attributes}, valid_session
